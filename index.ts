@@ -2,6 +2,7 @@ import cors from 'cors';
 import express, { json } from 'express';
 import 'express-async-errors';
 import rateLimit from 'express-rate-limit';
+import { adRouter } from './routers/ad.router';
 import { handleError, ValidationError } from './utils/errors';
 
 const app = express();
@@ -19,10 +20,7 @@ app.use(
   })
 );
 
-// Routes
-// app.get('/', async (req, res) => {
-//   throw new ValidationError('Test');
-// });
+app.use('/ad', adRouter);
 app.use(handleError);
 
 app.listen(3001, 'localhost', () => {
