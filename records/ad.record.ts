@@ -84,6 +84,8 @@ export class AdRecord implements AdEntity {
   async insert(): Promise<string> {
     if (!this.id) {
       this.id = uuid();
+    } else {
+      throw new Error('Data already exists in database.');
     }
 
     await pool.execute(

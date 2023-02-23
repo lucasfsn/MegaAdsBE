@@ -1,6 +1,15 @@
 import { AdRecord } from '../records/ad.record';
 import { pool } from '../utils/db';
 
+const defObj = {
+  name: 'Test',
+  description: 'Test',
+  url: 'google.com',
+  price: 0,
+  lat: 1,
+  lng: 2,
+};
+
 afterAll(async () => {
   await pool.end();
 });
@@ -35,4 +44,25 @@ test('AdRecord.findAll returns empty array of found entires when searching for s
   const ads = await AdRecord.findAll('?????????????????');
 
   expect(ads).toEqual([]);
+});
+
+test('AdRecord.insert returns new UUID.', async () => {
+  const ad = new AdRecord(defObj);
+
+  await ad.insert();
+
+  expect(ad.id).toBeDefined();
+  expect(typeof ad.id).toBe('string');
+});
+
+test('AdRecord.insert inserts data to db.', async () => {
+  const ad = new AdRecord(defObj);
+
+  await ad.insert();
+
+  const foundAd = await AdRecord.getOne(ad.id);
+
+  expect(foundAd).toBeDefined();
+  expect(foundAd).not.toBe(null);
+  expect(foundAd.id).toBe(ad.id);
 });
